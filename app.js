@@ -57,8 +57,22 @@ function getRandomIndex(){
   return Math.floor(Math.random()* allProducts.length);
 }
 
+let randomIndex = [];
+
 // Image Rendering
 function renderImgs(){
+  // while(randomIndex.length < 3){
+  //   let randoNum = getRandomIndex(); // 2 true
+  //   while(!randomIndex.includes(randoNum)){
+  //     // includes return a boolean
+  //     randomIndex.push(randoNum);
+  //     }
+  // }
+  
+  // let productOneIndex = randomIndex.pop();
+  // let productTwoIndex = randomIndex.pop();
+  // let productThreeIndex = randomIndex.pop();
+
   let productOneIndex = getRandomIndex();
   let productTwoIndex = getRandomIndex();
   let productThreeIndex = getRandomIndex();
