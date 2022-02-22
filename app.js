@@ -1,8 +1,8 @@
 'use strict';
 
 // Global variables
-
-let votesAllowed = 0;
+let votesAllowed = 25;
+let previousImage = [];
 // decrement in code to end voting round
 
 // product storage
@@ -15,6 +15,9 @@ let imgTwo = document.getElementById('img-two');
 let imgThree = document.getElementById('img-three');
 let resultsBtn = document.getElementById('show-results-btn');
 let showResults = document.getElementById('display-results-list');
+
+// Canvas Element for chart.js
+let ctx = document.getElementById('my-chart');
 
 // CONSTRUCTOR
 
@@ -79,15 +82,16 @@ function renderImgs(){
 
 
   // need validation to make sure they dont show up same round
-  while(productOneIndex === productTwoIndex){
+  while(productOneIndex === productTwoIndex || productTwoIndex === productThreeIndex || productOneIndex === productThreeIndex || previousImage.includes(productOneIndex) || previousImage.includes(productTwoIndex) || previousImage.includes(productThreeIndex)){
+    
+    productOneIndex = getRandomIndex();
     productTwoIndex = getRandomIndex();
-  }
-  while(productTwoIndex === productThreeIndex){
     productThreeIndex = getRandomIndex();
   }
-  while(productOneIndex === productThreeIndex){
-    productThreeIndex = getRandomIndex();
-  }
+ 
+  previousImage[0] = productOneIndex;
+  previousImage[1] = productTwoIndex;
+  previousImage[2] = productThreeIndex;
 
   imgOne.src = allProducts[productOneIndex].src;
   imgOne.alt = allProducts[productOneIndex].name;
@@ -111,7 +115,7 @@ renderImgs();
 // EVENT HANDLER - CALL BACK
 
 function handleClick(e){
-  votesAllowed++;
+  votesAllowed--;
 
   let imgClicked = e.target.alt;
 
@@ -124,24 +128,83 @@ function handleClick(e){
   renderImgs();
 
   // once voting completes - stop clicks
-  if(votesAllowed === 25){
+  if(votesAllowed === 0){
     myContainer.removeEventListener('click', handleClick);
   }
 }
 
 // EVENT #2 - Btn to show results - render list items
 
-function handleShowResults(e){
-  if(votesAllowed <= 25){
-    for(let i = 0; i < allProducts.length; i++){
-      let li = document.createElement('li');
-      li.textContent = `${allProducts[i].name} was viewed ${allProducts[i].views} times, and was voted for ${allProducts[i].clicks} times.`;
-      showResults.appendChild(li);
-    }
+// function handleShowResults(e){
+//   if(votesAllowed === 0){
+//     for(let i = 0; i < allProducts.length; i++){
+//       let li = document.createElement('li');
+//       li.textContent = `${allProducts[i].name} was viewed ${allProducts[i].views} times, and was voted for ${allProducts[i].clicks} times.`;
+//       showResults.appendChild(li);
+//     }
+//   }
+// }
+
+function renderChart() {
+
+  // array to hold all goat names for labels on bottom of chart
+  let productName = [];
+
+  // data for each dataset
+  let productClicks = [];
+  let productViews = [];
+
+  // for loop that will populate the above array dynamically
+  for(let i = 0; i < allProducts.length; i++){
+    productName.push(allProducts[i].name);
+    productClicks.push(allProducts[i].clicks);
+    productViews.push(allProducts[i].views);
   }
+
+
+  let chartObject = {
+    type: 'bar',
+    data: {
+      labels: productName,
+      datasets: [{ // array of objects - each object is a bar on the chart
+        label: '# of Clicks',
+        data: productClicks,
+        backgroundColor: [
+          'red'
+        ],
+        borderColor: [
+          'red'
+        ],
+        borderWidth: 1,
+        hoverBorderColor: 'black'
+      },
+      {
+        label: '# of Views',
+        data: productViews,
+        backgroundColor: [
+          'blue'
+        ],
+        borderColor: [
+          'blue'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  };
+
+  const myChart = new Chart(ctx, chartObject);
 }
+
+renderChart();
 
 // Grab what we want to listen to
 myContainer.addEventListener('click', handleClick);
 
-resultsBtn.addEventListener('click', handleShowResults);
+// resultsBtn.addEventListener('click', handleShowResults);
