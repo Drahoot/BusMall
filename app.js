@@ -126,10 +126,11 @@ function handleClick(e){
   }
   // Rerender new imgs
   renderImgs();
-
+  
   // once voting completes - stop clicks
   if(votesAllowed === 0){
     myContainer.removeEventListener('click', handleClick);
+    renderChart();
   }
 }
 
@@ -191,6 +192,7 @@ function renderChart() {
       }]
     },
     options: {
+      indexAxis: 'y',
       scales: {
         y: {
           beginAtZero: true
@@ -202,7 +204,6 @@ function renderChart() {
   const myChart = new Chart(ctx, chartObject);
 }
 
-renderChart();
 
 // Grab what we want to listen to
 myContainer.addEventListener('click', handleClick);
