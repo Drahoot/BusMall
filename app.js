@@ -19,6 +19,19 @@ let showResults = document.getElementById('display-results-list');
 // Canvas Element for chart.js
 let ctx = document.getElementById('my-chart');
 
+// LOCAL STORAGE 2: ELECTRIC BOOGALOO
+
+// Step 3: Getting it out of local storage
+let retreivedProducts = localStorage.getItem('products');
+
+console.log('retrieved products', retreivedProducts);
+
+// Step 4: Parse data for code to be read
+
+let parsedProducts = JSON.parse(retreivedProducts);
+
+console.log('parsed products', parsedProducts);
+
 // CONSTRUCTOR
 
 function Products(name, fileExtension = 'jpg'){
@@ -30,26 +43,29 @@ function Products(name, fileExtension = 'jpg'){
   allProducts.push(this);
 }
 
-new Products('bag'); 
-new Products('banana');
-new Products('bathroom');
-new Products('boots');
-new Products('wine-glass');
-new Products('breakfast');
-new Products('bubblegum');
-new Products('chair');
-new Products('cthulhu') ;
-new Products('dog-duck');
-new Products('dragon');
-new Products('pen');
-new Products('pet-sweep');
-new Products('scissors');
-new Products('shark');
-new Products('sweep', 'png');
-new Products('tauntaun');
-new Products('unicorn');
-new Products('water-can');
-
+if(retreivedProducts){
+  allProducts = parsedProducts;
+} else {
+  new Products('bag'); 
+  new Products('banana');
+  new Products('bathroom');
+  new Products('boots');
+  new Products('wine-glass');
+  new Products('breakfast');
+  new Products('bubblegum');
+  new Products('chair');
+  new Products('cthulhu') ;
+  new Products('dog-duck');
+  new Products('dragon');
+  new Products('pen');
+  new Products('pet-sweep');
+  new Products('scissors');
+  new Products('shark');
+  new Products('sweep', 'png');
+  new Products('tauntaun');
+  new Products('unicorn');
+  new Products('water-can');
+}
 console.log(allProducts);
 
 // Executable Code
@@ -131,6 +147,15 @@ function handleClick(e){
   if(votesAllowed === 0){
     myContainer.removeEventListener('click', handleClick);
     renderChart();
+
+    // LOCAL STORAGE 1: WRITTEN BY JAMES GUN
+
+    // Step 1: Stringifying data
+    let stringifiedProducts = JSON.stringify(allProducts);
+    console.log('stringified products', stringifiedProducts);
+
+    // step 2: Setting itme into local storage
+    localStorage.setItem('products', stringifiedProducts);
   }
 }
 
