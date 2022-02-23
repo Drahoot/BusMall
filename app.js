@@ -148,7 +148,7 @@ function handleClick(e){
     myContainer.removeEventListener('click', handleClick);
     renderChart();
 
-    // LOCAL STORAGE 1: WRITTEN BY JAMES GUN
+    // LOCAL STORAGE 1: WRITTEN BY JAMES GUNN
 
     // Step 1: Stringifying data
     let stringifiedProducts = JSON.stringify(allProducts);
